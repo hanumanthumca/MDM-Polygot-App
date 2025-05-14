@@ -22,10 +22,9 @@ exports.getAllCustomers = (req, res) => {
 };
 
 exports.updateCustomer = (req, res) => {
+
   // Make sure connection is initialized properly
-  console.log('inside new method for update@@@@@@@@@@@@@@@@@@');
-  let newName='Emma';
-  let oldName='Emma1';
+
   let objFromClient=req.body;
  // let objFromClientJSON=JSON.parse(req.body);
 let custId=objFromClient['custId']
@@ -94,6 +93,27 @@ let sqlText=`${sqlTextQuery}`;
 
   console.log("Starting query execution...");
 
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+exports.getGraphDataForCustomerByCountry = (req, res) => {
+ console.log('hello query string is ',req);
+  //let sqlTextQuery1 = "SELECT C.CUSTOMER_ID,C.FIRST_NAME,C.LAST_NAME,C.EMAIL,C.PHONE,C.AGE,C.LOYALTY_SCORE,C.GENDER_CD,C.BIRTH_DATE,CA.CUSTOMER_ADDRESS_MDM_ID,CA.IS_ACTIVE,CA.CUSTOMER_ADDRESS_ID,CA.CUSTOMER_ADDRESS,CA.CITY,CA.STATE,CA.COUNTRY,CA.ZIP_CODE FROM BO_CUSTOMER_ADDRESS CA LEFT JOIN BO_CUSTOMER_ADDRESS_BRIDGE CAB ON CA.CUSTOMER_ADDRESS_MDM_ID = CAB. CUSTOMER_ADDRESS_MDM_ID JOIN BO_CUSTOMER C ON C.CUSTOMER_MDM_ID = CAB.CUSTOMER_MDM_ID ";
+let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,COUNTRY,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR From MDM_DEV.BO_CUSTOMER_ADDRESS_XREF GROUP BY COUNTRY,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY')  ";
+
+let sqlText=`${sqlTextQuery}`;
   connection.execute({
     sqlText,
     complete: (err, stmt, rows) => {
