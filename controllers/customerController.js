@@ -111,7 +111,7 @@ let sqlText=`${sqlTextQuery}`;
 exports.getGraphDataForCustomerByCountry = (req, res) => {
  console.log('hello query string is ',req);
   //let sqlTextQuery1 = "SELECT C.CUSTOMER_ID,C.FIRST_NAME,C.LAST_NAME,C.EMAIL,C.PHONE,C.AGE,C.LOYALTY_SCORE,C.GENDER_CD,C.BIRTH_DATE,CA.CUSTOMER_ADDRESS_MDM_ID,CA.IS_ACTIVE,CA.CUSTOMER_ADDRESS_ID,CA.CUSTOMER_ADDRESS,CA.CITY,CA.STATE,CA.COUNTRY,CA.ZIP_CODE FROM BO_CUSTOMER_ADDRESS CA LEFT JOIN BO_CUSTOMER_ADDRESS_BRIDGE CAB ON CA.CUSTOMER_ADDRESS_MDM_ID = CAB. CUSTOMER_ADDRESS_MDM_ID JOIN BO_CUSTOMER C ON C.CUSTOMER_MDM_ID = CAB.CUSTOMER_MDM_ID ";
-let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,COUNTRY,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR From MDM_DEV.BO_CUSTOMER_ADDRESS_XREF GROUP BY COUNTRY,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY')  ";
+let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,COUNTRY,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR From MDM_DEV.BO_CUSTOMER_ADDRESS_XREF GROUP BY COUNTRY,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY')  order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') ";
 
 let sqlText=`${sqlTextQuery}`;
   connection.execute({
@@ -128,3 +128,43 @@ let sqlText=`${sqlTextQuery}`;
     }
   });
 };
+
+
+exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
+  console.log('hello query string is ',req);
+ let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+ let sqlText=`${sqlTextQuery}`;
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch active inactive customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
+ exports.getGraphDataForCustomersByYear = (req, res) => {
+  console.log('hello query string is ',req);
+ //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+ let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+ 
+ let sqlText=`${sqlTextQuery}`;
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch active inactive customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
