@@ -168,3 +168,24 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
      }
    });
  };
+
+
+ exports.getGraphDataForCustomersBySystemName = (req, res) => {
+  
+ //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+ let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,SRC_SYSTEM_NAME,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY SRC_SYSTEM_NAME,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY')  order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY');" ;
+ let sqlText=`${sqlTextQuery}`;
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch active inactive customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };

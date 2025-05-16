@@ -5,6 +5,7 @@ const { getAllCustomerDetails } = require('../controllers/customerController');
 const { getGraphDataForCustomerByCountry } = require('../controllers/customerController');
 const { getGraphDataForACtiveInactiveCustomers } = require('../controllers/customerController');
 const { getGraphDataForCustomersByYear } = require('../controllers/customerController');
+const { getGraphDataForCustomersBySystemName } = require('../controllers/customerController');
 
 const {updateCustomer} =require('../controllers/customerController');
 
@@ -15,6 +16,7 @@ router.get('/customerDetails', getAllCustomerDetails);
 router.get('/graphDataForCustomerByCountry', getGraphDataForCustomerByCountry);
 router.get('/graphDataForACtiveInactiveCustomers', getGraphDataForACtiveInactiveCustomers);
 router.get('/graphDataForCustomersByYear', getGraphDataForCustomersByYear);
+router.get('/graphDataForCustomersBySystemName', getGraphDataForCustomersBySystemName);
 router.post('/updateDetails',updateCustomer);
 
 
