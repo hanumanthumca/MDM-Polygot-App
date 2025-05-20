@@ -6,6 +6,8 @@ const { getGraphDataForCustomerByCountry } = require('../controllers/customerCon
 const { getGraphDataForACtiveInactiveCustomers } = require('../controllers/customerController');
 const { getGraphDataForCustomersByYear } = require('../controllers/customerController');
 const { getGraphDataForCustomersBySystemName } = require('../controllers/customerController');
+const { getHistoryDataForCustomers } = require('../controllers/customerController');
+
 
 const {updateCustomer} =require('../controllers/customerController');
 
@@ -17,6 +19,7 @@ router.get('/graphDataForCustomerByCountry', getGraphDataForCustomerByCountry);
 router.get('/graphDataForACtiveInactiveCustomers', getGraphDataForACtiveInactiveCustomers);
 router.get('/graphDataForCustomersByYear', getGraphDataForCustomersByYear);
 router.get('/graphDataForCustomersBySystemName', getGraphDataForCustomersBySystemName);
+router.get('/historyDataForCustomers', getHistoryDataForCustomers);
 router.post('/updateDetails',updateCustomer);
 
 
