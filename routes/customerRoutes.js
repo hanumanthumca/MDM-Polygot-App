@@ -8,6 +8,9 @@ const { getGraphDataForCustomersByYear } = require('../controllers/customerContr
 const { getGraphDataForCustomersBySystemName } = require('../controllers/customerController');
 const { getHistoryDataForCustomers } = require('../controllers/customerController');
 
+const { getCrossRefernceForCustomers } = require('../controllers/customerController');
+const { getCrossRefernceXReferenceForCustomers } = require('../controllers/customerController');
+const { getCrossRefernceTrustForCustomers } = require('../controllers/customerController');
 
 const {updateCustomer} =require('../controllers/customerController');
 
@@ -19,6 +22,11 @@ router.get('/graphDataForCustomerByCountry', getGraphDataForCustomerByCountry);
 router.get('/graphDataForACtiveInactiveCustomers', getGraphDataForACtiveInactiveCustomers);
 router.get('/graphDataForCustomersByYear', getGraphDataForCustomersByYear);
 router.get('/graphDataForCustomersBySystemName', getGraphDataForCustomersBySystemName);
+//cross refernces
+router.get('/crossRefernceForCustomers', getCrossRefernceForCustomers);
+router.get('/crossRefernceXReferenceForCustomers', getCrossRefernceXReferenceForCustomers);
+router.get('/crossRefernceTrustForCustomers', getCrossRefernceTrustForCustomers);
+
 router.get('/historyDataForCustomers', getHistoryDataForCustomers);
 router.post('/updateDetails',updateCustomer);
 
