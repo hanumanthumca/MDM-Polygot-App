@@ -193,7 +193,11 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
  exports.getHistoryDataForCustomers = (req, res) => {
   
   //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-  let sqlTextQuery="SELECT * FROM MDM_DEV.BO_CUSTOMER_HIST WHERE CUSTOMER_MDM_ID =769 ORDER BY HIST_CREATE_DATE desc;" ;
+  //let sqlTextQuery="SELECT * FROM MDM_DEV.BO_CUSTOMER_HIST WHERE CUSTOMER_MDM_ID =769 ORDER BY HIST_CREATE_DATE desc;" ;
+  let sqlTextQuery1="SELECT * FROM MDM_DEV.BO_CUSTOMER_HIST " ;
+  let sqlTextQuery2= req['query']['buildQuery'];
+  //WHERE CUSTOMER_MDM_ID =769 ORDER BY HIST_CREATE_DATE desc;
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
   let sqlText=`${sqlTextQuery}`;
     connection.execute({
       sqlText,
