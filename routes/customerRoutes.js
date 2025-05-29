@@ -12,6 +12,11 @@ const { getCrossRefernceForCustomers } = require('../controllers/customerControl
 const { getCrossRefernceXReferenceForCustomers } = require('../controllers/customerController');
 const { getCrossRefernceTrustForCustomers } = require('../controllers/customerController');
 
+const { getMatchRefernceForCustomers } = require('../controllers/customerController');
+const { getMatchRefernceXReferenceForCustomers } = require('../controllers/customerController');
+const { getMatchRefernceTrustForCustomers } = require('../controllers/customerController');
+const { getJobStatus } = require('../controllers/customerController');
+const { getJobLog } = require('../controllers/customerController');
 const {updateCustomer} =require('../controllers/customerController');
 
 
@@ -29,6 +34,14 @@ router.get('/crossRefernceTrustForCustomers', getCrossRefernceTrustForCustomers)
 
 router.get('/historyDataForCustomers', getHistoryDataForCustomers);
 router.post('/updateDetails',updateCustomer);
+//Match refernces
+router.get('/matchRefernceForCustomers', getMatchRefernceForCustomers);
+router.get('/matchRefernceXReferenceForCustomers', getMatchRefernceXReferenceForCustomers);
+router.get('/matchRefernceTrustForCustomers', getMatchRefernceTrustForCustomers);
+router.get('/runJobs', getJobStatus);
+router.get('/jobsLog', getJobLog);
+
+
 
 
 module.exports = router;
