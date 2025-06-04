@@ -217,8 +217,13 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
   exports.getCrossRefernceForCustomers = (req, res) => {
   
     //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-    let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160);" ;
-    let sqlText=`${sqlTextQuery}`;
+  //  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160);" ;
+ // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160);" ;
+  let sqlTextQuery1="SELECT * FROM MDM_DEV.BO_CUSTOMER " ;
+  let sqlTextQuery2= req['query']['buildQuery'];
+
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
+  let sqlText=`${sqlTextQuery}`;
       connection.execute({
         sqlText,
         complete: (err, stmt, rows) => {
@@ -237,7 +242,15 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
     exports.getCrossRefernceXReferenceForCustomers = (req, res) => {
   
       //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-      let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
+      //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
+      //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
+    
+    
+      let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER_xref " ;
+      let sqlTextQuery2= req['query']['buildQuery'];
+      let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+    
+      let sqlTextQuery=sqlTextQuery1+sqlTextQuery2+sqlTextQuery3; 
       let sqlText=`${sqlTextQuery}`;
         connection.execute({
           sqlText,
@@ -257,7 +270,15 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
       exports.getCrossRefernceTrustForCustomers = (req, res) => {
   
         //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-        let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+        //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+       // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+       
+        let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES " ;
+        let sqlTextQuery2= req['query']['buildQuery'];
+       // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+      
+        let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
+       
         let sqlText=`${sqlTextQuery}`;
           connection.execute({
             sqlText,
@@ -338,9 +359,32 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
 
 
       exports.getJobStatus = (req, res) => {
+        //let source:AnalyserNode;
+        let jobType=JSON.stringify(req['query']['jobType']);
+        let sourceTable =JSON.stringify(req['query']['source']);
+        let tabele=  JSON.stringify(req['query']['tabele']);
+       
+        let stage=JSON.stringify(req['query']['staging']);
+        let dev= JSON.stringify(req['query']['dev']);
+        sourceTable = sourceTable.replace(/"/g, "'");
+        jobType = jobType.replace(/"/g, "'");
+        tabele = tabele.replace(/"/g, "'");
 
+        stage = stage.replace(/"/g, "'");
+        dev = dev.replace(/"/g, "'");
+       
+        let statusVal='TRUE';
         //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-        let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+        let sqlTextQuery1='CALL MDM_LOAD_CONTROL(';
+       let queryStringFor= sourceTable+','+jobType+','+tabele+','+sourceTable+','+stage+','+dev+','+ statusVal ;
+       let finalportion=')'
+       //,jobType,tabele,sourceTable,stage,dev,statusVal)' ;
+      
+      //  let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+       // let sqlText=`${sqlTextQuery}`;
+       let sqlTextQuery=sqlTextQuery1+queryStringFor+finalportion;
+      // console.log('query is',sqlTextQuery);
+     //  console.log('query is',sqlTextQuery);
         let sqlText=`${sqlTextQuery}`;
           connection.execute({
             sqlText,
