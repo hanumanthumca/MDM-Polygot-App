@@ -300,7 +300,13 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
  exports.getMatchRefernceForCustomers = (req, res) => {
   
   //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160,1181);" ;
+  //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160,1181);" ;
+  //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160,1181);" ;
+  let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER " ;
+  let sqlTextQuery2= req['query']['buildQuery'];
+ // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
   let sqlText=`${sqlTextQuery}`;
     connection.execute({
       sqlText,
@@ -320,7 +326,14 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
   exports.getMatchRefernceXReferenceForCustomers = (req, res) => {
 
     //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-    let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_MTCH WHERE SRC_CUSTOMER_MDM_ID =145  OR TGT_CUSTOMER_MDM_ID =145;" ;
+  //  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_MTCH WHERE SRC_CUSTOMER_MDM_ID =145  OR TGT_CUSTOMER_MDM_ID =145;" ;
+    //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_MTCH WHERE SRC_CUSTOMER_MDM_ID =145  OR TGT_CUSTOMER_MDM_ID =145;" ;
+   // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_MTCH WHERE SRC_CUSTOMER_MDM_ID =145  OR TGT_CUSTOMER_MDM_ID =145;" ;
+    let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER_MTCH " ;
+    let sqlTextQuery2= req['query']['buildQuery'];
+   // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+  
+    let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
     let sqlText=`${sqlTextQuery}`;
       connection.execute({
         sqlText,
@@ -340,7 +353,14 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
     exports.getMatchRefernceTrustForCustomers = (req, res) => {
 
       //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-      let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+    //  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+
+     // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+      let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES " ;
+      let sqlTextQuery2= req['query']['buildQuery'];
+ // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
       let sqlText=`${sqlTextQuery}`;
         connection.execute({
           sqlText,
@@ -378,13 +398,9 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
         let sqlTextQuery1='CALL MDM_LOAD_CONTROL(';
        let queryStringFor= sourceTable+','+jobType+','+tabele+','+sourceTable+','+stage+','+dev+','+ statusVal ;
        let finalportion=')'
-       //,jobType,tabele,sourceTable,stage,dev,statusVal)' ;
-      
-      //  let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
-       // let sqlText=`${sqlTextQuery}`;
+    
        let sqlTextQuery=sqlTextQuery1+queryStringFor+finalportion;
-      // console.log('query is',sqlTextQuery);
-     //  console.log('query is',sqlTextQuery);
+    
         let sqlText=`${sqlTextQuery}`;
           connection.execute({
             sqlText,
