@@ -21,6 +21,40 @@ exports.getAllCustomers = (req, res) => {
   });
 };
 
+exports.createNewUser = (req, res) => {
+  let objFromClient=req.body;
+  console.log('new user obj',objFromClient);
+  let userName=objFromClient['custUserName'];
+  let fName=objFromClient['custFirstName'];
+  let lastName=objFromClient['custLastName'];
+  let email=objFromClient['custEmail'];
+  let phone=objFromClient['custPhone'];
+
+  const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER(USERNAME,ENCRYPTED_PASSWORD,FIRSTNAME,LASTNAME,EMAIL,PHONE,CREATED_BY,UPDATED_BY) 
+   values('${userName}','xxxxx','${fName}','${lastName}','${email}','${phone}','Admin','Admin');`;
+//   const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${custFirstName}', 
+// LAST_NAME = '${custLastName}' , EMAIL = '${custEmail}', PHONE = '${custPhone}',
+// AGE = '${custAge}' , GENDER_CD = '${custGender}', LOYALTY_SCORE = '${loyolScore}' 
+// where CUSTOMER_ID ='${custId}'`;
+//const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${newName}' where FIRST_NAME ='${oldName}'`;
+  //const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME ='Emma1' where FIRST_NAME ='Emma'`;
+  console.log("Starting query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+
+}
 exports.updateCustomer = (req, res) => {
 
   // Make sure connection is initialized properly
@@ -492,3 +526,64 @@ function generateoriginalMDMId(sqlQuery){
               }
             });
           };
+
+
+          exports.getTrustLog = (req, res) => {
+
+            let sqlTextQuery="Select * from  REPOS_TRUST_COLUMNS where column_name='FIRST_NAME' and SOURCE_SYSTEM='NETSUITE' " ;
+         //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+            let sqlText=`${sqlTextQuery}`;
+              connection.execute({
+                sqlText,
+                complete: (err, stmt, rows) => {
+                  console.log("Inside complete callback");  // <-- VERY IMPORTANT
+                  if (err) {
+                    console.error('Failed to fetch active inactive customers: ' + err.message);
+                    return res.status(500).json({ error: err.message });
+                  } else {
+                    console.log("Query successful, sending response...");
+                    return res.status(200).json(rows);
+                  }
+                }
+              });
+            };
+
+            exports.getTrustLogFromCurrentTable = (req, res) => {
+
+              let sqlTextQuery="Select * from BO_CUSTOMER_TRUST_COLUMN_VALUES where customer_mdm_id in (199) and column_name='FIRST_NAME' and SOURCE_SYSTEM='NETSUITE'" ;
+           //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+              let sqlText=`${sqlTextQuery}`;
+                connection.execute({
+                  sqlText,
+                  complete: (err, stmt, rows) => {
+                    console.log("Inside complete callback");  // <-- VERY IMPORTANT
+                    if (err) {
+                      console.error('Failed to fetch active inactive customers: ' + err.message);
+                      return res.status(500).json({ error: err.message });
+                    } else {
+                      console.log("Query successful, sending response...");
+                      return res.status(200).json(rows);
+                    }
+                  }
+                });
+              };
+
+              exports.getAllUsers = (req, res) => {
+
+                let sqlTextQuery="Select * from EDW.MDM_DEV.REPOS_USER" ;
+             //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+                let sqlText=`${sqlTextQuery}`;
+                  connection.execute({
+                    sqlText,
+                    complete: (err, stmt, rows) => {
+                      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+                      if (err) {
+                        console.error('Failed to fetch active inactive customers: ' + err.message);
+                        return res.status(500).json({ error: err.message });
+                      } else {
+                        console.log("Query successful, sending response...");
+                        return res.status(200).json(rows);
+                      }
+                    }
+                  });
+                };
