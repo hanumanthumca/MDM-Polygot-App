@@ -29,9 +29,9 @@ exports.createNewUser = (req, res) => {
   let lastName=objFromClient['custLastName'];
   let email=objFromClient['custEmail'];
   let phone=objFromClient['custPhone'];
+  let pwd=objFromClient['custPwd'];
 
-  const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER(USERNAME,ENCRYPTED_PASSWORD,FIRSTNAME,LASTNAME,EMAIL,PHONE,CREATED_BY,UPDATED_BY) 
-   values('${userName}','xxxxx','${fName}','${lastName}','${email}','${phone}','Admin','Admin');`;
+  const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER(USERNAME,ENCRYPTED_PASSWORD,FIRSTNAME,LASTNAME,EMAIL,PHONE,CREATED_BY,UPDATED_BY) values('${userName}','${pwd}','${fName}','${lastName}','${email}','${phone}','Admin','Admin')`;
 //   const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${custFirstName}', 
 // LAST_NAME = '${custLastName}' , EMAIL = '${custEmail}', PHONE = '${custPhone}',
 // AGE = '${custAge}' , GENDER_CD = '${custGender}', LOYALTY_SCORE = '${loyolScore}' 
@@ -55,6 +55,45 @@ exports.createNewUser = (req, res) => {
   });
 
 }
+
+exports.updateUserDetails = (req, res) => {
+
+  // Make sure connection is initialized properly
+
+  let objFromClient=req.body;
+ // let objFromClientJSON=JSON.parse(req.body);
+let custId=objFromClient['custId']
+let custFirstName=objFromClient['custFirstName']
+let custLastName=objFromClient['custLastName']
+let custEmail=objFromClient['custEmail']
+let custPhone= objFromClient['custPhone']
+
+
+
+  //${newName}  ${oldName}
+ // AGE,GENDER_CD,LOYALTY_SCORE
+ // const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME =`+newName+` where FIRST_NAME =`+oldName+`;`;
+const sqlText = `UPDATE REPOS_USER  set FIRSTNAME = '${custFirstName}', 
+LASTNAME = '${custLastName}' , EMAIL = '${custEmail}', PHONE = '${custPhone}'
+ where USER_ID ='${custId}'`;
+//const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${newName}' where FIRST_NAME ='${oldName}'`;
+  //const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME ='Emma1' where FIRST_NAME ='Emma'`;
+  console.log("Starting query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
 exports.updateCustomer = (req, res) => {
 
   // Make sure connection is initialized properly

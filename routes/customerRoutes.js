@@ -21,6 +21,7 @@ const { getTrustLog } = require('../controllers/customerController');
 const { getTrustLogFromCurrentTable } = require('../controllers/customerController');
 const{getAllUsers}= require('../controllers/customerController');
 const {updateCustomer} =require('../controllers/customerController');
+const {updateUserDetails} =require('../controllers/customerController');
 const {createNewUser} =require('../controllers/customerController');
 
 // Define the route
@@ -37,6 +38,7 @@ router.get('/crossRefernceTrustForCustomers', getCrossRefernceTrustForCustomers)
 
 router.get('/historyDataForCustomers', getHistoryDataForCustomers);
 router.post('/updateDetails',updateCustomer);
+router.post('/updateUserDetails',updateUserDetails);
 router.post('/createUser',createNewUser);
 //Match refernces
 router.get('/matchRefernceForCustomers', getMatchRefernceForCustomers);
