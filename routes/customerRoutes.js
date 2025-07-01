@@ -20,9 +20,13 @@ const { getJobLog } = require('../controllers/customerController');
 const { getTrustLog } = require('../controllers/customerController');
 const { getTrustLogFromCurrentTable } = require('../controllers/customerController');
 const{getAllUsers}= require('../controllers/customerController');
+const{getAllTableColumns}= require('../controllers/customerController');
+const {getAllUserNames} =require('../controllers/customerController');
 const {updateCustomer} =require('../controllers/customerController');
 const {updateUserDetails} =require('../controllers/customerController');
 const {createNewUser} =require('../controllers/customerController');
+const {createUserPermission} =require('../controllers/customerController');
+const {getAllUserRolesByName} =require('../controllers/customerController');
 
 // Define the route
 router.get('/customers', getAllCustomers);
@@ -40,6 +44,7 @@ router.get('/historyDataForCustomers', getHistoryDataForCustomers);
 router.post('/updateDetails',updateCustomer);
 router.post('/updateUserDetails',updateUserDetails);
 router.post('/createUser',createNewUser);
+router.post('/createUserPermission',createUserPermission);
 //Match refernces
 router.get('/matchRefernceForCustomers', getMatchRefernceForCustomers);
 router.get('/matchRefernceXReferenceForCustomers', getMatchRefernceXReferenceForCustomers);
@@ -49,6 +54,10 @@ router.get('/jobsLog', getJobLog);
 router.get('/getTrustLog', getTrustLog);
 router.get('/getTrustLogFromCurrentTable', getTrustLogFromCurrentTable);
 router.get('/getAllUsers', getAllUsers);
+router.get('/getAllUserNames', getAllUserNames);
+router.get('/getAllUserRolesByName', getAllUserRolesByName);
+
+router.get('/getAllTableColumns', getAllTableColumns);
 
 
 

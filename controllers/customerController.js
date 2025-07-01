@@ -21,6 +21,37 @@ exports.getAllCustomers = (req, res) => {
   });
 };
 
+exports.createUserPermission = (req, res) => {
+  let objFromClient=req.body;
+  console.log('new user obj',objFromClient);
+  let userName=objFromClient['userName'];
+  let roleName=objFromClient['role'];
+  let tableName=objFromClient['tableName'];
+  let coulumnName=objFromClient['coulumnName'];
+  let readPermission=objFromClient['readPermission'];
+  let createPermission=objFromClient['createPermission'];
+  let updatePermission=objFromClient['updatePermission'];
+  let deletePermission=objFromClient['deletePermission'];
+
+  const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS(USERNAME,ROLE_NAME,TABLE_NAME,COLUMN_NAME,READ_PERMISSION,CREATE_PERMISSION,UPDATE_PERMISSION,DELETE_PERMISSION,CREATED_BY,UPDATED_BY) values('${userName}','${roleName}','${tableName}','${coulumnName}','${readPermission}','${createPermission}','${updatePermission}','${deletePermission}','Admin','Admin')`;
+ //const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME ='Emma1' where FIRST_NAME ='Emma'`;
+  console.log("Starting query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+
+}
 exports.createNewUser = (req, res) => {
   let objFromClient=req.body;
   console.log('new user obj',objFromClient);
@@ -287,60 +318,60 @@ exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
     });
   };
 
-  exports.getCrossRefernceForCustomers = (req, res) => {
-  
-    //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-  //  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160);" ;
- // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160);" ;
-  let sqlTextQuery1="SELECT * FROM MDM_DEV.BO_CUSTOMER " ;
-  let sqlTextQuery2= req['query']['buildQuery'];
+exports.getCrossRefernceForCustomers = (req, res) => {
 
-  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
-  let sqlText=`${sqlTextQuery}`;
-      connection.execute({
-        sqlText,
-        complete: (err, stmt, rows) => {
-          console.log("Inside complete callback");  // <-- VERY IMPORTANT
-          if (err) {
-            console.error('Failed to fetch active inactive customers: ' + err.message);
-            return res.status(500).json({ error: err.message });
-          } else {
-            console.log("Query successful, sending response...");
-            return res.status(200).json(rows);
-          }
-        }
-      });
-    };
+  //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+  //  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160);" ;
+  // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER WHERE CUSTOMER_MDM_ID in(160);" ;
+  let sqlTextQuery1 = "SELECT * FROM MDM_DEV.BO_CUSTOMER ";
+  let sqlTextQuery2 = req['query']['buildQuery'];
+
+  let sqlTextQuery = sqlTextQuery1 + sqlTextQuery2;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
 
 //     from x ref query we will get original_mdm_id
 // from  trust  column values we have to pass cust_mdm_id and original_mdm_id 
-    exports.getCrossRefernceXReferenceForCustomers = (req, res) => {
-  
-      //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-      //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
-      //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
-    
-    
-      let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER_xref " ;
-      let sqlTextQuery2= req['query']['buildQuery'];
-      let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
-    
-      let sqlTextQuery=sqlTextQuery1+sqlTextQuery2+sqlTextQuery3; 
-      let sqlText=`${sqlTextQuery}`;
-        connection.execute({
-          sqlText,
-          complete: (err, stmt, rows) => {
-            console.log("Inside complete callback");  // <-- VERY IMPORTANT
-            if (err) {
-              console.error('Failed to fetch active inactive customers: ' + err.message);
-              return res.status(500).json({ error: err.message });
-            } else {
-              console.log("Query successful, sending response...");
-              return res.status(200).json(rows);
-            }
-          }
-        });
-      };
+exports.getCrossRefernceXReferenceForCustomers = (req, res) => {
+
+  //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+  //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
+  //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
+
+
+  let sqlTextQuery1 = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
+  let sqlTextQuery2 = req['query']['buildQuery'];
+  let sqlTextQuery3 = " ORDER BY CUSTOMER_MDM_ID";;
+
+  let sqlTextQuery = sqlTextQuery1 + sqlTextQuery2 + sqlTextQuery3;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
       // let sqlTextFromXRef = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
       // let sqlTextQueryXRef2 = req['query']['buildQuery'];
       // let sqlTextQueryForXRef = sqlTextFromXRef + sqlTextQueryXRef2;
@@ -390,39 +421,39 @@ function generateoriginalMDMId(sqlQuery){
 
 
       }
-      exports.getCrossRefernceTrustForCustomers = (req, res) => {
-  
-        let sqlTextFromXRef = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
-       let sqlTextQueryXRef2 = req['query']['buildQuery'];
-       let sqlTextQueryForXRef = sqlTextFromXRef + sqlTextQueryXRef2;
-     // let returnedVal= generateoriginalMDMId(sqlTextQueryForXRef);
-    //  console.log('xref query executed inside trust query',returnedVal);
-        //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-        //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
-       // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
-       
-      
-       let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES " ;
-        let sqlTextQuery2= req['query']['buildQuery'];
-       // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
-      
-        let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
-       
-        let sqlText=`${sqlTextQuery}`;
-          connection.execute({
-            sqlText,
-            complete: (err, stmt, rows) => {
-              console.log("Inside complete callback");  // <-- VERY IMPORTANT
-              if (err) {
-                console.error('Failed to fetch active inactive customers: ' + err.message);
-                return res.status(500).json({ error: err.message });
-              } else {
-                console.log("Query successful, sending response...");
-                return res.status(200).json(rows);
-              }
-            }
-          });
-        };
+exports.getCrossRefernceTrustForCustomers = (req, res) => {
+
+  let sqlTextFromXRef = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
+  let sqlTextQueryXRef2 = req['query']['buildQuery'];
+  let sqlTextQueryForXRef = sqlTextFromXRef + sqlTextQueryXRef2;
+  // let returnedVal= generateoriginalMDMId(sqlTextQueryForXRef);
+  //  console.log('xref query executed inside trust query',returnedVal);
+  //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+  //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+  // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+
+
+  let sqlTextQuery1 = "SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES ";
+  let sqlTextQuery2 = req['query']['buildQuery'];
+  // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+
+  let sqlTextQuery = sqlTextQuery1 + sqlTextQuery2;
+
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
 
  //Match refernces
  
@@ -479,150 +510,208 @@ function generateoriginalMDMId(sqlQuery){
       });
     };
 
-    exports.getMatchRefernceTrustForCustomers = (req, res) => {
+exports.getMatchRefernceTrustForCustomers = (req, res) => {
 
-      //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-    //  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+  //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+  //  let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
 
-     // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
-      let sqlTextQuery1="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES " ;
-      let sqlTextQuery2= req['query']['buildQuery'];
- // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+  // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+  let sqlTextQuery1 = "SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES ";
+  let sqlTextQuery2 = req['query']['buildQuery'];
+  // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
 
-  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2; 
-      let sqlText=`${sqlTextQuery}`;
-        connection.execute({
-          sqlText,
-          complete: (err, stmt, rows) => {
-            console.log("Inside complete callback");  // <-- VERY IMPORTANT
-            if (err) {
-              console.error('Failed to fetch active inactive customers: ' + err.message);
-              return res.status(500).json({ error: err.message });
-            } else {
-              console.log("Query successful, sending response...");
-              return res.status(200).json(rows);
-            }
-          }
-        });
-      };
-
-
-      exports.getJobStatus = (req, res) => {
-        //let source:AnalyserNode;
-        let jobType=JSON.stringify(req['query']['jobType']);
-        let sourceTable =JSON.stringify(req['query']['source']);
-        let tabele=  JSON.stringify(req['query']['tabele']);
-       
-        let stage=JSON.stringify(req['query']['staging']);
-        let dev= JSON.stringify(req['query']['dev']);
-        sourceTable = sourceTable.replace(/"/g, "'");
-        jobType = jobType.replace(/"/g, "'");
-        tabele = tabele.replace(/"/g, "'");
-
-        stage = stage.replace(/"/g, "'");
-        dev = dev.replace(/"/g, "'");
-       
-        let statusVal='TRUE';
-        //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-        let sqlTextQuery1='CALL MDM_LOAD_CONTROL(';
-       let queryStringFor= sourceTable+','+jobType+','+tabele+','+sourceTable+','+stage+','+dev+','+ statusVal ;
-       let finalportion=')'
-    
-       let sqlTextQuery=sqlTextQuery1+queryStringFor+finalportion;
-    
-        let sqlText=`${sqlTextQuery}`;
-          connection.execute({
-            sqlText,
-            complete: (err, stmt, rows) => {
-              console.log("Inside complete callback");  // <-- VERY IMPORTANT
-              if (err) {
-                console.error('Failed to fetch active inactive customers: ' + err.message);
-                return res.status(500).json({ error: err.message });
-              } else {
-                console.log("Query successful, sending response...");
-                return res.status(200).json(rows);
-              }
-            }
-          });
-        };
-
-        exports.getJobLog = (req, res) => {
-
-          let sqlTextQuery="SELECT * FROM MDM_EXECUTION_LOG ORDER BY EXECUTED_DATETIME DESC " ;
-       //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
-          let sqlText=`${sqlTextQuery}`;
-            connection.execute({
-              sqlText,
-              complete: (err, stmt, rows) => {
-                console.log("Inside complete callback");  // <-- VERY IMPORTANT
-                if (err) {
-                  console.error('Failed to fetch active inactive customers: ' + err.message);
-                  return res.status(500).json({ error: err.message });
-                } else {
-                  console.log("Query successful, sending response...");
-                  return res.status(200).json(rows);
-                }
-              }
-            });
-          };
+  let sqlTextQuery = sqlTextQuery1 + sqlTextQuery2;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
 
 
-          exports.getTrustLog = (req, res) => {
+exports.getJobStatus = (req, res) => {
+  //let source:AnalyserNode;
+  let jobType = JSON.stringify(req['query']['jobType']);
+  let sourceTable = JSON.stringify(req['query']['source']);
+  let tabele = JSON.stringify(req['query']['tabele']);
 
-            let sqlTextQuery="Select * from  REPOS_TRUST_COLUMNS where column_name='FIRST_NAME' and SOURCE_SYSTEM='NETSUITE' " ;
-         //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
-            let sqlText=`${sqlTextQuery}`;
-              connection.execute({
-                sqlText,
-                complete: (err, stmt, rows) => {
-                  console.log("Inside complete callback");  // <-- VERY IMPORTANT
-                  if (err) {
-                    console.error('Failed to fetch active inactive customers: ' + err.message);
-                    return res.status(500).json({ error: err.message });
-                  } else {
-                    console.log("Query successful, sending response...");
-                    return res.status(200).json(rows);
-                  }
-                }
-              });
-            };
+  let stage = JSON.stringify(req['query']['staging']);
+  let dev = JSON.stringify(req['query']['dev']);
+  sourceTable = sourceTable.replace(/"/g, "'");
+  jobType = jobType.replace(/"/g, "'");
+  tabele = tabele.replace(/"/g, "'");
 
-            exports.getTrustLogFromCurrentTable = (req, res) => {
+  stage = stage.replace(/"/g, "'");
+  dev = dev.replace(/"/g, "'");
 
-              let sqlTextQuery="Select * from BO_CUSTOMER_TRUST_COLUMN_VALUES where customer_mdm_id in (199) and column_name='FIRST_NAME' and SOURCE_SYSTEM='NETSUITE'" ;
-           //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
-              let sqlText=`${sqlTextQuery}`;
-                connection.execute({
-                  sqlText,
-                  complete: (err, stmt, rows) => {
-                    console.log("Inside complete callback");  // <-- VERY IMPORTANT
-                    if (err) {
-                      console.error('Failed to fetch active inactive customers: ' + err.message);
-                      return res.status(500).json({ error: err.message });
-                    } else {
-                      console.log("Query successful, sending response...");
-                      return res.status(200).json(rows);
-                    }
-                  }
-                });
-              };
+  let statusVal = 'TRUE';
+  //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+  let sqlTextQuery1 = 'CALL MDM_LOAD_CONTROL(';
+  let queryStringFor = sourceTable + ',' + jobType + ',' + tabele + ',' + sourceTable + ',' + stage + ',' + dev + ',' + statusVal;
+  let finalportion = ')'
 
-              exports.getAllUsers = (req, res) => {
+  let sqlTextQuery = sqlTextQuery1 + queryStringFor + finalportion;
 
-                let sqlTextQuery="Select * from EDW.MDM_DEV.REPOS_USER" ;
-             //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
-                let sqlText=`${sqlTextQuery}`;
-                  connection.execute({
-                    sqlText,
-                    complete: (err, stmt, rows) => {
-                      console.log("Inside complete callback");  // <-- VERY IMPORTANT
-                      if (err) {
-                        console.error('Failed to fetch active inactive customers: ' + err.message);
-                        return res.status(500).json({ error: err.message });
-                      } else {
-                        console.log("Query successful, sending response...");
-                        return res.status(200).json(rows);
-                      }
-                    }
-                  });
-                };
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+exports.getJobLog = (req, res) => {
+
+  let sqlTextQuery = "SELECT * FROM MDM_EXECUTION_LOG ORDER BY EXECUTED_DATETIME DESC ";
+  //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+
+exports.getTrustLog = (req, res) => {
+
+  let sqlTextQuery = "Select * from  REPOS_TRUST_COLUMNS where column_name='FIRST_NAME' and SOURCE_SYSTEM='NETSUITE' ";
+  //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+exports.getTrustLogFromCurrentTable = (req, res) => {
+
+  let sqlTextQuery = "Select * from BO_CUSTOMER_TRUST_COLUMN_VALUES where customer_mdm_id in (199) and column_name='FIRST_NAME' and SOURCE_SYSTEM='NETSUITE'";
+  //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+              
+exports.getAllTableColumns = (req, res) => {
+
+  let sqlTextQuery = "SELECT TABLE_NAME,COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA ='MDM_DEV' AND ( TABLE_NAME NOT LIKE '%HIST%' AND TABLE_NAME NOT LIKE '%XREF%'  AND TABLE_NAME NOT LIKE '%MTCH%'  AND TABLE_NAME NOT LIKE '%HMRG%'  AND TABLE_NAME NOT LIKE '%REPOS%'  AND TABLE_NAME NOT LIKE '%TRUST%'  AND TABLE_NAME NOT LIKE '%VALIDATION%' AND TABLE_NAME NOT LIKE '%LOG%' AND TABLE_NAME NOT LIKE '%REFERENCE%' AND TABLE_NAME NOT LIKE '%STREAM%' AND TABLE_NAME NOT LIKE '%DELTA%' AND TABLE_NAME NOT LIKE '%PROFILE%' AND TABLE_NAME NOT LIKE '%STATS%' AND TABLE_NAME NOT LIKE '%ERROR%' AND TABLE_NAME NOT LIKE '%ALERT%' ) ORDER BY table_name,ORDINAL_POSITION,COLUMN_NAME";
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+exports.getAllUserRolesByName = (req, res) => {
+
+  let sqlTextQuery = "Select * from EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS where USERNAME='TestUserName'";
+  //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+exports.getAllUserNames = (req, res) => {
+
+  let sqlTextQuery = "Select USERNAME from EDW.MDM_DEV.REPOS_USER";
+  //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+exports.getAllUsers = (req, res) => {
+
+  let sqlTextQuery = "Select * from EDW.MDM_DEV.REPOS_USER";
+  //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
