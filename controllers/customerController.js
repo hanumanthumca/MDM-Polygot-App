@@ -52,6 +52,16 @@ exports.createUserPermission = (req, res) => {
   });
 
 }
+// exports.getUserID = (userName) => {
+   
+//   console.log('userName',userName);
+//   return userName;
+  
+// };
+function getUserID(userName) {
+  console.log('userName',userName);
+  return userName;
+}
 exports.createNewUser = (req, res) => {
   let objFromClient=req.body;
   console.log('new user obj',objFromClient);
@@ -61,6 +71,8 @@ exports.createNewUser = (req, res) => {
   let email=objFromClient['custEmail'];
   let phone=objFromClient['custPhone'];
   let pwd=objFromClient['custPwd'];
+
+  let roleIds=objFromClient['userRoles'];
 
   const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER(USERNAME,ENCRYPTED_PASSWORD,FIRSTNAME,LASTNAME,EMAIL,PHONE,CREATED_BY,UPDATED_BY) values('${userName}','${pwd}','${fName}','${lastName}','${email}','${phone}','Admin','Admin')`;
 //   const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${custFirstName}', 
@@ -79,14 +91,28 @@ exports.createNewUser = (req, res) => {
         console.error('Failed to fetch customers: ' + err.message);
         return res.status(500).json({ error: err.message });
       } else {
-        console.log("Query successful, sending response...");
+        console.log("Query successful, sending response...",res);
+       let uname= getUserID(userName);
         return res.status(200).json(rows);
+
       }
     }
   });
 
 }
 
+
+// getUserID=async(userName)=>{
+//   console.log('userName',userName);
+// }
+// exports.getUserId = (req, res) => {
+//   const now = new Date();
+
+//   res.json({
+//     date: now.toISOString(), // e.g., "2025-07-02T13:30:00.000Z"
+//     message: 'Current server date and time'
+//   });
+// };
 exports.updateUserDetails = (req, res) => {
 
   // Make sure connection is initialized properly
@@ -638,6 +664,25 @@ exports.getTrustLogFromCurrentTable = (req, res) => {
   });
 };
               
+exports.getAllUserRoles = (req, res) => {
+
+  let sqlTextQuery = "SELECT * FROM EDW.MDM_DEV.REPOS_ROLES;";
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
 exports.getAllTableColumns = (req, res) => {
 
   let sqlTextQuery = "SELECT TABLE_NAME,COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA ='MDM_DEV' AND ( TABLE_NAME NOT LIKE '%HIST%' AND TABLE_NAME NOT LIKE '%XREF%'  AND TABLE_NAME NOT LIKE '%MTCH%'  AND TABLE_NAME NOT LIKE '%HMRG%'  AND TABLE_NAME NOT LIKE '%REPOS%'  AND TABLE_NAME NOT LIKE '%TRUST%'  AND TABLE_NAME NOT LIKE '%VALIDATION%' AND TABLE_NAME NOT LIKE '%LOG%' AND TABLE_NAME NOT LIKE '%REFERENCE%' AND TABLE_NAME NOT LIKE '%STREAM%' AND TABLE_NAME NOT LIKE '%DELTA%' AND TABLE_NAME NOT LIKE '%PROFILE%' AND TABLE_NAME NOT LIKE '%STATS%' AND TABLE_NAME NOT LIKE '%ERROR%' AND TABLE_NAME NOT LIKE '%ALERT%' ) ORDER BY table_name,ORDINAL_POSITION,COLUMN_NAME";
@@ -657,9 +702,11 @@ exports.getAllTableColumns = (req, res) => {
   });
 };
 
+
 exports.getAllUserRolesByName = (req, res) => {
 
-  let sqlTextQuery = "Select * from EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS where USERNAME='TestUserName'";
+  //let sqlTextQuery = "Select * from EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS where USERNAME='TestUserName'";
+ let sqlTextQuery = " SELECT * FROM EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS where role_id=101";
   //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
   let sqlText = `${sqlTextQuery}`;
   connection.execute({

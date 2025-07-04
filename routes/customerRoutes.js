@@ -27,6 +27,7 @@ const {updateUserDetails} =require('../controllers/customerController');
 const {createNewUser} =require('../controllers/customerController');
 const {createUserPermission} =require('../controllers/customerController');
 const {getAllUserRolesByName} =require('../controllers/customerController');
+const {getAllUserRoles} =require('../controllers/customerController');
 
 // Define the route
 router.get('/customers', getAllCustomers);
@@ -58,6 +59,7 @@ router.get('/getAllUserNames', getAllUserNames);
 router.get('/getAllUserRolesByName', getAllUserRolesByName);
 
 router.get('/getAllTableColumns', getAllTableColumns);
+router.get('/getAllUserRoles', getAllUserRoles);
 
 
 
