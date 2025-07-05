@@ -60,7 +60,25 @@ exports.createUserPermission = (req, res) => {
 // };
 function getUserID(userName) {
   console.log('userName',userName);
-  return userName;
+  const sqlText = `Select USER_ID from EDW.MDM_DEV.REPOS_USER where USERNAME='vinay'`;
+
+  console.log("Starting query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        let id=res;
+        return id;
+      }
+    }
+  });
+  //return userName;
 }
 exports.createNewUser = (req, res) => {
   let objFromClient=req.body;
@@ -261,7 +279,7 @@ let sqlText=`${sqlTextQuery}`;
 
 
 exports.getGraphDataForACtiveInactiveCustomers = (req, res) => {
-  console.log('hello query string is ',req);
+
  let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
  let sqlText=`${sqlTextQuery}`;
    connection.execute({
