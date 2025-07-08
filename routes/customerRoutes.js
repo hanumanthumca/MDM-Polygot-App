@@ -24,14 +24,21 @@ const{getAllTableColumns}= require('../controllers/customerController');
 const {getAllUserNames} =require('../controllers/customerController');
 const {updateCustomer} =require('../controllers/customerController');
 const {updateUserDetails} =require('../controllers/customerController');
+const {updateUserRoles} =require('../controllers/customerController');
+const {deleteRolePermission} =require('../controllers/customerController');
 const {createNewUser} =require('../controllers/customerController');
 const {createUserPermission} =require('../controllers/customerController');
 const {getAllUserRolesByName} =require('../controllers/customerController');
 const {getAllUserRoles} =require('../controllers/customerController');
+const {getUserRolesForDetails} =require('../controllers/customerController');
+const {getUserLoginForDetails} =require('../controllers/customerController');
 
 // Define the route
 router.get('/customers', getAllCustomers);
 router.get('/customerDetails', getAllCustomerDetails);
+router.post('/getUserRolesForDetails', getUserRolesForDetails);
+router.post('/getUserLoginForDetails', getUserLoginForDetails);
+
 router.get('/graphDataForCustomerByCountry', getGraphDataForCustomerByCountry);
 router.get('/graphDataForACtiveInactiveCustomers', getGraphDataForACtiveInactiveCustomers);
 router.get('/graphDataForCustomersByYear', getGraphDataForCustomersByYear);
@@ -44,8 +51,10 @@ router.get('/crossRefernceTrustForCustomers', getCrossRefernceTrustForCustomers)
 router.get('/historyDataForCustomers', getHistoryDataForCustomers);
 router.post('/updateDetails',updateCustomer);
 router.post('/updateUserDetails',updateUserDetails);
+router.post('/updateUserRoles',updateUserRoles);
 router.post('/createUser',createNewUser);
 router.post('/createUserPermission',createUserPermission);
+router.post('/deleteRolePermission',deleteRolePermission);
 //Match refernces
 router.get('/matchRefernceForCustomers', getMatchRefernceForCustomers);
 router.get('/matchRefernceXReferenceForCustomers', getMatchRefernceXReferenceForCustomers);

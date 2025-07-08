@@ -24,7 +24,7 @@ exports.getAllCustomers = (req, res) => {
 exports.createUserPermission = (req, res) => {
   let objFromClient=req.body;
   console.log('new user obj',objFromClient);
-  let userName=objFromClient['userName'];
+  //let userName=objFromClient['userName'];
   let roleName=objFromClient['role'];
   let tableName=objFromClient['tableName'];
   let coulumnName=objFromClient['coulumnName'];
@@ -33,7 +33,7 @@ exports.createUserPermission = (req, res) => {
   let updatePermission=objFromClient['updatePermission'];
   let deletePermission=objFromClient['deletePermission'];
 
-  const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS(USERNAME,ROLE_NAME,TABLE_NAME,COLUMN_NAME,READ_PERMISSION,CREATE_PERMISSION,UPDATE_PERMISSION,DELETE_PERMISSION,CREATED_BY,UPDATED_BY) values('${userName}','${roleName}','${tableName}','${coulumnName}','${readPermission}','${createPermission}','${updatePermission}','${deletePermission}','Admin','Admin')`;
+  const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS(ROLE_ID,TABLE_NAME,COLUMN_NAME,READ_PERMISSION,CREATE_PERMISSION,UPDATE_PERMISSION,DELETE_PERMISSION,CREATED_BY,UPDATED_BY) values('${roleName}','${tableName}','${coulumnName}','${readPermission}','${createPermission}','${updatePermission}','${deletePermission}','Admin','Admin') `;
  //const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME ='Emma1' where FIRST_NAME ='Emma'`;
   console.log("Starting query execution...");
 
@@ -45,7 +45,9 @@ exports.createUserPermission = (req, res) => {
         console.error('Failed to fetch customers: ' + err.message);
         return res.status(500).json({ error: err.message });
       } else {
+      //  const createdId = rows && rows.length > 0 ? rows[0]['USER_ID'] : null;
         console.log("Query successful, sending response...");
+      //  console.log('Insert successful, created ID:', createdId);
         return res.status(200).json(rows);
       }
     }
@@ -93,11 +95,6 @@ exports.createNewUser = (req, res) => {
   let roleIds=objFromClient['userRoles'];
 
   const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER(USERNAME,ENCRYPTED_PASSWORD,FIRSTNAME,LASTNAME,EMAIL,PHONE,CREATED_BY,UPDATED_BY) values('${userName}','${pwd}','${fName}','${lastName}','${email}','${phone}','Admin','Admin')`;
-//   const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${custFirstName}', 
-// LAST_NAME = '${custLastName}' , EMAIL = '${custEmail}', PHONE = '${custPhone}',
-// AGE = '${custAge}' , GENDER_CD = '${custGender}', LOYALTY_SCORE = '${loyolScore}' 
-// where CUSTOMER_ID ='${custId}'`;
-//const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${newName}' where FIRST_NAME ='${oldName}'`;
   //const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME ='Emma1' where FIRST_NAME ='Emma'`;
   console.log("Starting query execution...");
 
@@ -110,13 +107,34 @@ exports.createNewUser = (req, res) => {
         return res.status(500).json({ error: err.message });
       } else {
         console.log("Query successful, sending response...",res);
-       let uname= getUserID(userName);
+       // const createdId = rows && rows.length > 0 ? rows[0]['USER_ID'] : null;
+     // console.log('Insert successful, created ID:', createdId);
+      // let uname= getUserID(userName);
         return res.status(200).json(rows);
 
       }
     }
   });
 
+
+  const sqlText1 = `Select USER_ID from EDW.MDM_DEV.REPOS_USER where USERNAME='${userName}'`;
+
+  console.log("Starting query execution...");
+
+  // connection.execute({
+  //   sqlText:sqlText1,
+  //   complete: (err, stmt, rows) => {
+  //     console.log("Inside complete callback");  // <-- VERY IMPORTANT
+  //     if (err) {
+  //       console.error('Failed to fetch customers: ' + err.message);
+  //       return res.status(500).json({ error: err.message });
+  //     } else {
+  //       console.log("Query successful, sending response...");
+      
+      
+  //     }
+  //   }
+  // });
 }
 
 
@@ -131,6 +149,72 @@ exports.createNewUser = (req, res) => {
 //     message: 'Current server date and time'
 //   });
 // };
+
+exports.deleteRolePermission = (req, res) => {
+  let objFromClient=req.body;
+  console.log('new user obj',objFromClient);
+  //let userName=objFromClient['userName'];
+  let roleName=objFromClient['role'];
+ 
+
+const sqlText = `delete  FROM EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS WHERE role_id ='${roleName}' `;
+ 
+  console.log("delete query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to delete role: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        // const createdId = rows && rows.length > 0 ? rows[0]['USER_ID'] : null;
+        // console.log("Query successful, sending response...");
+        // console.log('Insert successful, created ID:', createdId);
+        return res.status(200).json(rows);
+      }
+    }
+  });
+
+}
+
+
+
+ exports.updateUserRoles = (req, res) => {
+
+  // Make sure connection is initialized properly
+
+  let objFromClient=req.body;
+ // let objFromClientJSON=JSON.parse(req.body);
+let custId=objFromClient['custId'];
+let role=objFromClient['userRoles'];
+
+const sqlText = `INSERT INTO EDW.MDM_DEV.REPOS_USER_ROLES(USER_ID,ROLE_ID,CREATED_BY,UPDATED_BY) values(${custId},${role},'Admin','Admin');`;
+
+
+  //${newName}  ${oldName}
+ // AGE,GENDER_CD,LOYALTY_SCORE
+ // const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME =`+newName+` where FIRST_NAME =`+oldName+`;`;
+
+//const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME = '${newName}' where FIRST_NAME ='${oldName}'`;
+  //const sqlText = `UPDATE BO_CUSTOMER  set FIRST_NAME ='Emma1' where FIRST_NAME ='Emma'`;
+  console.log("Starting query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
 exports.updateUserDetails = (req, res) => {
 
   // Make sure connection is initialized properly
@@ -211,16 +295,69 @@ where CUSTOMER_ID ='${custId}'`;
   });
 };
 
+
+exports.getUserLoginForDetails = (req, res) => {
+ let objFromClient=req.body;
+ let userid=objFromClient['userid'];
+ let pwd=objFromClient['password'];
+ console.log('hello query string is ',req);
+//const sqlText = `Select ROLE_ID from EDW.MDM_DEV.REPOS_USER_ROLES WHERE USER_ID =${userid} `;
+const sqlText = `SELECT * FROM EDW.MDM_DEV.REPOS_USER where USERNAME='vinay' and ENCRYPTED_PASSWORD='xxxxx' `;
+
+  console.log("Starting query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+
+exports.getUserRolesForDetails = (req, res) => {
+  // Make sure connection is initialized properly
+ // const sqlText = `SELECT * FROM BO_CUSTOMER`;
+ //req['query']['buildQuery'];
+ let objFromClient=req.body;
+ let userid=objFromClient['userid'];
+ console.log('hello query string is ',req);
+ //Select ROLE_ID from EDW.MDM_DEV.REPOS_USER_ROLES WHERE USER_ID =101
+//  const sqlText = `SELECT C.CUSTOMER_ID,C.FIRST_NAME,C.LAST_NAME,C.EMAIL,C.PHONE,C.AGE,C.LOYALTY_SCORE,C.GENDER_CD,C.BIRTH_DATE,CA.CUSTOMER_ADDRESS_MDM_ID,CA.IS_ACTIVE,CA.CUSTOMER_ADDRESS_ID,CA.CUSTOMER_ADDRESS,
+//  CA.CITY,CA.STATE,CA.COUNTRY,CA.ZIP_CODE FROM BO_CUSTOMER_ADDRESS CA
+//  LEFT JOIN BO_CUSTOMER_ADDRESS_BRIDGE CAB ON CA.CUSTOMER_ADDRESS_MDM_ID = CAB. CUSTOMER_ADDRESS_MDM_ID
+//  JOIN BO_CUSTOMER C ON C.CUSTOMER_MDM_ID = CAB.CUSTOMER_MDM_ID `;
+const sqlText = `Select ROLE_ID from EDW.MDM_DEV.REPOS_USER_ROLES WHERE USER_ID =${userid} `;
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
+
+
 exports.getAllCustomerDetails = (req, res) => {
   // Make sure connection is initialized properly
  // const sqlText = `SELECT * FROM BO_CUSTOMER`;
  //req['query']['buildQuery']
  console.log('hello query string is ',req);
  
-//  const sqlText = `SELECT C.CUSTOMER_ID,C.FIRST_NAME,C.LAST_NAME,C.EMAIL,C.PHONE,C.AGE,C.LOYALTY_SCORE,C.GENDER_CD,C.BIRTH_DATE,CA.CUSTOMER_ADDRESS_MDM_ID,CA.IS_ACTIVE,CA.CUSTOMER_ADDRESS_ID,CA.CUSTOMER_ADDRESS,
-//  CA.CITY,CA.STATE,CA.COUNTRY,CA.ZIP_CODE FROM BO_CUSTOMER_ADDRESS CA
-//  LEFT JOIN BO_CUSTOMER_ADDRESS_BRIDGE CAB ON CA.CUSTOMER_ADDRESS_MDM_ID = CAB. CUSTOMER_ADDRESS_MDM_ID
-//  JOIN BO_CUSTOMER C ON C.CUSTOMER_MDM_ID = CAB.CUSTOMER_MDM_ID `;
 
  //let sqlTextQuery1 = "SELECT C.CUSTOMER_ID,C.FIRST_NAME,C.LAST_NAME,C.EMAIL,C.PHONE,C.AGE,C.LOYALTY_SCORE,C.GENDER_CD,C.BIRTH_DATE,CA.CUSTOMER_ADDRESS_MDM_ID,CA.IS_ACTIVE,CA.CUSTOMER_ADDRESS_ID,CA.CUSTOMER_ADDRESS,CA.CITY,CA.STATE,CA.COUNTRY,CA.ZIP_CODE FROM BO_CUSTOMER_ADDRESS CA LEFT JOIN BO_CUSTOMER_ADDRESS_BRIDGE CAB ON CA.CUSTOMER_ADDRESS_MDM_ID = CAB. CUSTOMER_ADDRESS_MDM_ID JOIN BO_CUSTOMER C ON C.CUSTOMER_MDM_ID = CAB.CUSTOMER_MDM_ID ";
 let sqlTextQuery1="SELECT C.CUSTOMER_MDM_ID,C.IS_ACTIVE,C.CUSTOMER_ID,C.FIRST_NAME,C.LAST_NAME,C.EMAIL,C.PHONE,C.AGE,C.LOYALTY_SCORE,C.GENDER_CD,C.BIRTH_DATE,CA.CUSTOMER_ADDRESS_MDM_ID,CA.IS_ACTIVE,CA.CUSTOMER_ADDRESS_ID,CA.CUSTOMER_ADDRESS,CA.CITY,CA.STATE,CA.COUNTRY,CA.ZIP_CODE,CBR.CUSTOMER_BUS_REL_MDM_ID,CBR.CUSTOMER_BUS_REL_ID,CBR.CUSTOMER_MDM_ID,CBR.RELATIONSHIP_TYPE_CD,CBR.RELATIONSHIP_START_DATE,CBR.RELATIONSHIP_END_DATE FROM BO_CUSTOMER C LEFT JOIN BO_CUSTOMER_ADDRESS_BRIDGE CAB ON C.CUSTOMER_MDM_ID = CAB.CUSTOMER_MDM_ID JOIN BO_CUSTOMER_ADDRESS CA ON CA.CUSTOMER_ADDRESS_MDM_ID = CAB. CUSTOMER_ADDRESS_MDM_ID LEFT JOIN BO_CUSTOMER_BUS_REL CBR ON C.CUSTOMER_MDM_ID = CBR.CUSTOMER_MDM_ID "
@@ -234,10 +371,6 @@ let sqlTextQuery2= req['query']['buildQuery'];
 
 let sqlText=`${sqlTextQuery}`;
 //   const sqlText = `SELECT C.CUSTOMER_ID,C.FIRST_NAME,C.LAST_NAME,C.EMAIL,C.PHONE,C.AGE,C.LOYALTY_SCORE,C.GENDER_CD,C.BIRTH_DATE,CA.CUSTOMER_ADDRESS_MDM_ID,CA.IS_ACTIVE,CA.CUSTOMER_ADDRESS_ID,CA.CUSTOMER_ADDRESS,
-// CA.CITY,CA.STATE,CA.COUNTRY,CA.ZIP_CODE FROM BO_CUSTOMER_ADDRESS CA
-// LEFT JOIN BO_CUSTOMER_ADDRESS_BRIDGE CAB ON CA.CUSTOMER_ADDRESS_MDM_ID = CAB. CUSTOMER_ADDRESS_MDM_ID
-// JOIN BO_CUSTOMER C ON C.CUSTOMER_MDM_ID = CAB.CUSTOMER_MDM_ID  where C.AGE=27 and CA.CITY='Seattle'`;
-
 
   console.log("Starting query execution...");
 
@@ -391,11 +524,7 @@ exports.getCrossRefernceForCustomers = (req, res) => {
 // from  trust  column values we have to pass cust_mdm_id and original_mdm_id 
 exports.getCrossRefernceXReferenceForCustomers = (req, res) => {
 
-  //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
-  //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
-  //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_xref WHERE CUSTOMER_MDM_ID in(160) ORDER BY CUSTOMER_MDM_ID;" ;
-
-
+  
   let sqlTextQuery1 = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
   let sqlTextQuery2 = req['query']['buildQuery'];
   let sqlTextQuery3 = " ORDER BY CUSTOMER_MDM_ID";;
@@ -417,23 +546,7 @@ exports.getCrossRefernceXReferenceForCustomers = (req, res) => {
   });
 };
       // let sqlTextFromXRef = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
-      // let sqlTextQueryXRef2 = req['query']['buildQuery'];
-      // let sqlTextQueryForXRef = sqlTextFromXRef + sqlTextQueryXRef2;
-
-      // let sqlTextForXRef = `${sqlTextQueryForXRef}`;
-      // let xRefResult = connection.execute({
-      //   sqlTextForXRef,
-      //   complete: (err, stmt, rows) => {
-      //     console.log("Inside complete callback");  // <-- VERY IMPORTANT
-      //     if (err) {
-      //       console.error('Failed to fetch active inactive customers: ' + err.message);
-      //      // return res.status(500).json({ error: err.message });
-      //     } else {
-      //       console.log("Query successful, sending response...");
-      //      // return res.status(200).json(rows);
-      //     }
-      //   }
-      // });
+      
 //console.log('xref query executed inside trust query',xRefResult);
 function generateoriginalMDMId(sqlQuery){
     return new Promise(async (resolve,reject) => {
@@ -724,7 +837,11 @@ exports.getAllTableColumns = (req, res) => {
 exports.getAllUserRolesByName = (req, res) => {
 
   //let sqlTextQuery = "Select * from EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS where USERNAME='TestUserName'";
- let sqlTextQuery = " SELECT * FROM EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS where role_id=101";
+ let sqlTextQuery1 = "SELECT * FROM EDW.MDM_DEV.REPOS_USER_ROLE_PERMISSIONS "
+ let sqlTextQuery2 = req['query']['buildQuery'];
+ let sqlTextQuery = sqlTextQuery1 + sqlTextQuery2;
+ // let sqlText = `${sqlTextQuery}`;
+  
   //   let sqlTextQuery="CALL MDM_LOAD_CONTROL('NETSUITE','DATA_INGESTION','CUSTOMER','NETSUITE','MDM_STG','MDM_DEV',TRUE);" ;
   let sqlText = `${sqlTextQuery}`;
   connection.execute({
