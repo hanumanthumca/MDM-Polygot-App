@@ -298,11 +298,11 @@ where CUSTOMER_ID ='${custId}'`;
 
 exports.getUserLoginForDetails = (req, res) => {
  let objFromClient=req.body;
- let userid=objFromClient['userid'];
+ let userName=objFromClient['userName'];
  let pwd=objFromClient['password'];
  console.log('hello query string is ',req);
 //const sqlText = `Select ROLE_ID from EDW.MDM_DEV.REPOS_USER_ROLES WHERE USER_ID =${userid} `;
-const sqlText = `SELECT * FROM EDW.MDM_DEV.REPOS_USER where USERNAME='vinay' and ENCRYPTED_PASSWORD='xxxxx' `;
+const sqlText = `SELECT * FROM EDW.MDM_DEV.REPOS_USER where USERNAME='${userName}' and ENCRYPTED_PASSWORD='${pwd}' `;
 
   console.log("Starting query execution...");
 
