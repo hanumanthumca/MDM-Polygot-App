@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { getAllCustomers } = require('../controllers/customerController');
 const { getAllCustomerDetails } = require('../controllers/customerController');
+const { getAllPersonsDetails } = require('../controllers/customerController');
+
 const { getGraphDataForCustomerByCountry } = require('../controllers/customerController');
 const { getGraphDataForACtiveInactiveCustomers } = require('../controllers/customerController');
 const { getGraphDataForCustomersByYear } = require('../controllers/customerController');
@@ -32,10 +34,27 @@ const {getAllUserRolesByName} =require('../controllers/customerController');
 const {getAllUserRoles} =require('../controllers/customerController');
 const {getUserRolesForDetails} =require('../controllers/customerController');
 const {getUserLoginForDetails} =require('../controllers/customerController');
+const {getOverViewForPerson} =require('../controllers/customerController');
+
+const {getPersonalDetails} =require('../controllers/customerController');
+const {getAdditionalDetails} =require('../controllers/customerController');
+const {getPhoneDetails} =require('../controllers/customerController');
+const {getEMailDetails} =require('../controllers/customerController');
+const {getIdentifierDetailsForPersons} =require('../controllers/customerController');
+const {getAddressDetailsForPersons} =require('../controllers/customerController');
 
 // Define the route
 router.get('/customers', getAllCustomers);
 router.get('/customerDetails', getAllCustomerDetails);
+router.get('/personDetails', getAllPersonsDetails);
+router.get('/personOverView', getOverViewForPerson);
+router.get('/personOverView', getPersonalDetails);
+router.get('/personalDetails', getPersonalDetails);
+router.get('/personAdditionalDetails', getAdditionalDetails);
+router.get('/personPhoneDetails', getPhoneDetails);
+router.get('/personEmailDetails', getEMailDetails);
+router.get('/personIdentifierDetails', getIdentifierDetailsForPersons);
+router.get('/personAddressDetails', getAddressDetailsForPersons);
 router.post('/getUserRolesForDetails', getUserRolesForDetails);
 router.post('/getUserLoginForDetails', getUserLoginForDetails);
 

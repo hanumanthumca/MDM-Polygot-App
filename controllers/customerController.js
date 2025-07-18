@@ -351,7 +351,195 @@ const sqlText = `Select ROLE_ID from EDW.MDM_DEV.REPOS_USER_ROLES WHERE USER_ID 
   });
 };
 
+exports.getAddressDetailsForPersons = (req, res) => {
+  let sqlTextQuery1="SELECT a.IS_ACTIVE, a.ADDRESS_ID, a.ADDRESS_LINE_1, a.ADDRESS_LINE_2, a.ADDRESS_LINE_3, a.CITY_NAME, a.STATE_CD, a.POSTAL_CD, a.CARE_OF_ADDRESS, a.PO_BOX, a.MAIL_BOX_NUMBER, a.BLDG_NAME, a.DEPT_NAME, a.FLOOR_NUMBER, a.UNIT_NUMBER, a.STREET_NUMBER, a.STREET_NAME, a.COUNTY_NAME, a.COUNTRY_CD, a.LATITUDE, a.LONGITUDE ,pa.ADDRESS_TYPE FROM POLYEDW.MDM_DEV.BO_ADDRESS a LEFT JOIN POLYEDW.MDM_DEV.BO_PARTY_ADDRESS pa ON a.ADDRESS_MDM_ID=pa.ADDRESS_MDM_ID  LEFT JOIN POLYEDW.MDM_DEV.BO_PARTY p ON pa.PARTY_MDM_ID =p.PARTY_MDM_ID   "
+  // let sqlTextQuery=sqlTextQuery1;
+ let sqlTextQuery2= req['query']['buildQuery'];
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+  
+ let sqlText=`${sqlTextQuery}`;
+   console.log("Starting query execution...");
+ 
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
+exports.getIdentifierDetailsForPersons = (req, res) => {
+  let sqlTextQuery1="SELECT PARTY_IDENTIFIER_MDM_ID, IS_ACTIVE, IDENTIFIER_TYPE_CD, IDENTIFIER_VAL FROM POLYEDW.MDM_DEV.BO_PARTY_IDENTIFIER  "
+  // let sqlTextQuery=sqlTextQuery1;
+ let sqlTextQuery2= req['query']['buildQuery'];
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+  
+ let sqlText=`${sqlTextQuery}`;
+   console.log("Starting query execution...");
+ 
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
+exports.getEMailDetails = (req, res) => {
+  let sqlTextQuery1="SELECT PARTY_EMAIL_MDM_ID, IS_ACTIVE, DO_NOT_CALL_IND, EMAIL_TYPE_CD, EMAIL_ADDR FROM POLYEDW.MDM_DEV.BO_PARTY_EMAIL  "
+  // let sqlTextQuery=sqlTextQuery1;
+ let sqlTextQuery2= req['query']['buildQuery'];
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+  
+ let sqlText=`${sqlTextQuery}`;
+   console.log("Starting query execution...");
+ 
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
+exports.getPhoneDetails = (req, res) => {
+  let sqlTextQuery1="SELECT PARTY_PHONE_MDM_ID, IS_ACTIVE, PHONE_COUNTRY_CD, PHONE_NUM, PHONE_EXT_NUM, IS_VALID_IND, DO_NOT_CALL_IND, PHONE_TYPE_CD FROM POLYEDW.MDM_DEV.BO_PARTY_PHONE  "
+  // let sqlTextQuery=sqlTextQuery1;
+ let sqlTextQuery2= req['query']['buildQuery'];
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+  
+ let sqlText=`${sqlTextQuery}`;
+   console.log("Starting query execution...");
+ 
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
+exports.getAdditionalDetails = (req, res) => {
+  let sqlTextQuery1="SELECT PARTY_NAME_MDM_ID, IS_ACTIVE, ALTERNATE_NAME FROM POLYEDW.MDM_DEV.BO_PARTY_NAME  "
+  // let sqlTextQuery=sqlTextQuery1;
+ let sqlTextQuery2= req['query']['buildQuery'];
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+  
+ let sqlText=`${sqlTextQuery}`;
+   console.log("Starting query execution...");
+ 
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
 
+exports.getPersonalDetails = (req, res) => {
+  let sqlTextQuery1="SELECT PARTY_PERSON_DETAILS_MDM_ID, IS_ACTIVE, NICKNAME, JOB_TITLE, MARITAL_STATUS_CD, CRIMINAL_RECORD, DEATH_DATE, EDUCATION_LEVEL_CD, IS_EMPLOYEE_IND, IS_VIP_IND, PRIMARY_LANGUAGE, INCOME, HOME_OWNERSHIP, NUMBER_OF_CHILDREN, REMARKS FROM POLYEDW.MDM_DEV.BO_PARTY_PERSON_DETAILS  "
+  // let sqlTextQuery=sqlTextQuery1;
+ let sqlTextQuery2= req['query']['buildQuery'];
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+  
+ let sqlText=`${sqlTextQuery}`;
+   console.log("Starting query execution...");
+ 
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
+
+exports.getOverViewForPerson = (req, res) => {
+  let sqlTextQuery1="SELECT PARTY_MDM_ID, IS_ACTIVE, PARTY_ID, NAME_PREFIX_CD, FIRST_NAME, LAST_NAME, MIDDLE_NAME, BIRTHDATE, GENDER_CD, FULL_NAME, PARTY_TYPE FROM POLYEDW.MDM_DEV.BO_PARTY "
+  // let sqlTextQuery=sqlTextQuery1;
+ let sqlTextQuery2= req['query']['buildQuery'];
+  let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+  
+ let sqlText=`${sqlTextQuery}`;
+   console.log("Starting query execution...");
+ 
+   connection.execute({
+     sqlText,
+     complete: (err, stmt, rows) => {
+       console.log("Inside complete callback");  // <-- VERY IMPORTANT
+       if (err) {
+         console.error('Failed to fetch customers: ' + err.message);
+         return res.status(500).json({ error: err.message });
+       } else {
+         console.log("Query successful, sending response...");
+         return res.status(200).json(rows);
+       }
+     }
+   });
+ };
+
+exports.getAllPersonsDetails = (req, res) => {
+ let sqlTextQuery1="select distinct p.PARTY_MDM_ID,p.PARTY_ID,p.FIRST_NAME,p.MIDDLE_NAME,p.LAST_NAME,p.FULL_NAME,p.BIRTHDATE,p.GENDER_CD,a.ADDRESS_LINE_1,a.CITY_NAME,a.STATE_CD,a.POSTAL_CD,a.COUNTRY_CD,pe.EMAIL_ADDR,ph.PHONE_NUM,ph.PHONE_TYPE_CD,from POLYEDW.MDM_DEV.BO_PARTY p left join POLYEDW.MDM_DEV.BO_PARTY_ADDRESS pa ON pa.PARTY_MDM_ID = p.PARTY_MDM_ID LEFT join POLYEDW.MDM_DEV.BO_ADDRESS a on pa.ADDRESS_MDM_ID = a.ADDRESS_MDM_ID left join POLYEDW.MDM_DEV.BO_PARTY_EMAIL pe on p.PARTY_MDM_ID = pe.PARTY_MDM_ID left join POLYEDW.MDM_DEV.BO_PARTY_PHONE ph on p.PARTY_MDM_ID = ph.PARTY_MDM_ID "
+// let sqlTextQuery1="select distinct p.PARTY_MDM_ID,p.PARTY_ID,p.FIRST_NAME,p.MIDDLE_NAME,p.LAST_NAME,p.FULL_NAME,p.BIRTHDATE,p.GENDER_CD from POLYEDW.MDM_DEV.BO_PARTY p left join POLYEDW.MDM_DEV.BO_PARTY_ADDRESS pa ON pa.PARTY_MDM_ID = p.PARTY_MDM_ID LEFT join POLYEDW.MDM_DEV.BO_ADDRESS a on pa.ADDRESS_MDM_ID = a.ADDRESS_MDM_ID left join POLYEDW.MDM_DEV.BO_PARTY_EMAIL pe on p.PARTY_MDM_ID = pe.PARTY_MDM_ID left join POLYEDW.MDM_DEV.BO_PARTY_PHONE ph on p.PARTY_MDM_ID = ph.PARTY_MDM_ID "
+ 
+ // let sqlTextQuery=sqlTextQuery1;
+let sqlTextQuery2= req['query']['buildQuery'];
+ let sqlTextQuery=sqlTextQuery1+sqlTextQuery2;
+ 
+let sqlText=`${sqlTextQuery}`;
+  console.log("Starting query execution...");
+
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
 exports.getAllCustomerDetails = (req, res) => {
   // Make sure connection is initialized properly
  // const sqlText = `SELECT * FROM BO_CUSTOMER`;
