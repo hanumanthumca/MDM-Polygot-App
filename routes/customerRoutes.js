@@ -42,6 +42,12 @@ const {getPhoneDetails} =require('../controllers/customerController');
 const {getEMailDetails} =require('../controllers/customerController');
 const {getIdentifierDetailsForPersons} =require('../controllers/customerController');
 const {getAddressDetailsForPersons} =require('../controllers/customerController');
+const {getNamePrefix} =require('../controllers/customerController');
+const {getGenders} =require('../controllers/customerController');
+const {getPartyTypes} =require('../controllers/customerController');
+const {getMaritalStatus} =require('../controllers/customerController');
+const {getEducationLevels} =require('../controllers/customerController');
+const {getYesNoVals} =require('../controllers/customerController');
 
 // Define the route
 router.get('/customers', getAllCustomers);
@@ -90,5 +96,11 @@ router.get('/getAllTableColumns', getAllTableColumns);
 router.get('/getAllUserRoles', getAllUserRoles);
 
 
+router.get('/getNamePrefix', getNamePrefix);
+router.get('/getGenders', getGenders);
+router.get('/getPartyTypes', getPartyTypes);
+router.get('/getMaritalStatus', getMaritalStatus);
+router.get('/getEducationLevels', getEducationLevels);
+router.get('/getYesNoVals', getYesNoVals);
 
 module.exports = router;
