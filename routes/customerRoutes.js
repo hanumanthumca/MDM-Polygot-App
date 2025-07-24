@@ -9,6 +9,7 @@ const { getGraphDataForACtiveInactiveCustomers } = require('../controllers/custo
 const { getGraphDataForCustomersByYear } = require('../controllers/customerController');
 const { getGraphDataForCustomersBySystemName } = require('../controllers/customerController');
 const { getHistoryDataForCustomers } = require('../controllers/customerController');
+const { getHistoryDataForPersons } = require('../controllers/customerController');
 
 const { getCrossRefernceForCustomers } = require('../controllers/customerController');
 const { getCrossRefernceXReferenceForCustomers } = require('../controllers/customerController');
@@ -74,6 +75,8 @@ router.get('/crossRefernceXReferenceForCustomers', getCrossRefernceXReferenceFor
 router.get('/crossRefernceTrustForCustomers', getCrossRefernceTrustForCustomers);
 
 router.get('/historyDataForCustomers', getHistoryDataForCustomers);
+router.get('/historyDataForPersons', getHistoryDataForPersons);
+
 router.post('/updateDetails',updateCustomer);
 router.post('/updateUserDetails',updateUserDetails);
 router.post('/updateUserRoles',updateUserRoles);
