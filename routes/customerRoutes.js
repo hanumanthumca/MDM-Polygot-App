@@ -49,6 +49,8 @@ const {getPartyTypes} =require('../controllers/customerController');
 const {getMaritalStatus} =require('../controllers/customerController');
 const {getEducationLevels} =require('../controllers/customerController');
 const {getYesNoVals} =require('../controllers/customerController');
+const {getCrossRefernceXReferenceForPersons} =require('../controllers/customerController');
+const {getCrossRefernceTrustForPersons} =require('../controllers/customerController');
 
 // Define the route
 router.get('/customers', getAllCustomers);
@@ -72,6 +74,9 @@ router.get('/graphDataForCustomersBySystemName', getGraphDataForCustomersBySyste
 //cross refernces
 router.get('/crossRefernceForCustomers', getCrossRefernceForCustomers);
 router.get('/crossRefernceXReferenceForCustomers', getCrossRefernceXReferenceForCustomers);
+router.get('/crossRefernceXReferenceForPersons', getCrossRefernceXReferenceForPersons);
+router.get('/crossRefernceTrustForPersons', getCrossRefernceTrustForPersons);
+
 router.get('/crossRefernceTrustForCustomers', getCrossRefernceTrustForCustomers);
 
 router.get('/historyDataForCustomers', getHistoryDataForCustomers);

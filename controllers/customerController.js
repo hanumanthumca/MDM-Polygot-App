@@ -753,6 +753,31 @@ exports.getCrossRefernceXReferenceForCustomers = (req, res) => {
     }
   });
 };
+
+// from  trust  column values we have to pass cust_mdm_id and original_mdm_id 
+exports.getCrossRefernceXReferenceForPersons = (req, res) => {
+
+  
+  let sqlTextQuery1 = "SELECT * FROM POLYEDW.MDM_DEV.BO_PARTY_XREF ";
+  let sqlTextQuery2 = req['query']['buildQuery'];
+  let sqlTextQuery3 = " ORDER BY PARTY_MDM_ID";
+
+  let sqlTextQuery = sqlTextQuery1 + sqlTextQuery2 + sqlTextQuery3;
+  let sqlText = `${sqlTextQuery}`;
+  connection.execute({
+    sqlText,
+    complete: (err, stmt, rows) => {
+      console.log("Inside complete callback");  // <-- VERY IMPORTANT
+      if (err) {
+        console.error('Failed to fetch active inactive customers: ' + err.message);
+        return res.status(500).json({ error: err.message });
+      } else {
+        console.log("Query successful, sending response...");
+        return res.status(200).json(rows);
+      }
+    }
+  });
+};
       // let sqlTextFromXRef = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
       
 //console.log('xref query executed inside trust query',xRefResult);
@@ -786,6 +811,40 @@ function generateoriginalMDMId(sqlQuery){
 
 
       }
+
+      exports.getCrossRefernceTrustForPersons = (req, res) => {
+
+        // let sqlTextFromXRef = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
+        // let sqlTextQueryXRef2 = req['query']['buildQuery'];
+        // let sqlTextQueryForXRef = sqlTextFromXRef + sqlTextQueryXRef2;
+        // let returnedVal= generateoriginalMDMId(sqlTextQueryForXRef);
+        //  console.log('xref query executed inside trust query',returnedVal);
+        //let sqlTextQuery="SELECT COUNT(1) AS NUMBER_OF_RECORDS,IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') AS YEAR FROm MDM_DEV.BO_CUSTOMER_XREF GROUP BY IS_ACTIVE,TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') order by TO_CHAR(SRC_LAST_UPDATE_DATE,'YYYY') " ;
+        //let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+        // let sqlTextQuery="SELECT * FROM mdm_dev.BO_CUSTOMER_TRUST_COLUMN_VALUES WHERE CUSTOMER_MDM_ID in(1181,160);" ;
+      
+      
+        let sqlTextQuery1 = "SELECT * FROM POLYEDW.MDM_DEV.BO_PARTY_TRUST_COLUMN_VALUES  ";
+        let sqlTextQuery2 = req['query']['buildQuery'];
+        // let sqlTextQuery3= " ORDER BY CUSTOMER_MDM_ID" ;;
+      
+        let sqlTextQuery = sqlTextQuery1 + sqlTextQuery2;
+      
+        let sqlText = `${sqlTextQuery}`;
+        connection.execute({
+          sqlText,
+          complete: (err, stmt, rows) => {
+            console.log("Inside complete callback");  // <-- VERY IMPORTANT
+            if (err) {
+              console.error('Failed to fetch active inactive customers: ' + err.message);
+              return res.status(500).json({ error: err.message });
+            } else {
+              console.log("Query successful, sending response...");
+              return res.status(200).json(rows);
+            }
+          }
+        });
+      };
 exports.getCrossRefernceTrustForCustomers = (req, res) => {
 
   let sqlTextFromXRef = "SELECT * FROM mdm_dev.BO_CUSTOMER_xref ";
